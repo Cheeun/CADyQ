@@ -58,7 +58,7 @@ sh train_idn_cadyq.sh
 sh train_edsrbaseline_cadyq.sh
 sh train_srresnet_cadyq.sh
 ```
-Pretrained model for stduent and teacher model to start training from can be accessed from [Google Drive]().
+Pretrained model for stduent and teacher model to start training from can be accessed from [Google Drive](https://drive.google.com/drive/folders/1nPVdcqLqcaq-fp3Kg04WCUKav0PFER6x?usp=sharing).
 
 
 ### How to test CADyQ
@@ -66,7 +66,8 @@ Pretrained model for stduent and teacher model to start training from can be acc
 sh test_cadyq_patch.sh # for patch-wise inference
 sh test_cadyq_image.sh # for image-wise inference
 ```
-Our pretrained model can be accessed from [Google Drive]().
+<!-- TODO -->
+<!-- Our pretrained model can be accessed from [Google Drive](https://drive.google.com/drive/folders/1nPVdcqLqcaq-fp3Kg04WCUKav0PFER6x?usp=sharing). -->
 
 
 
