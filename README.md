@@ -1,6 +1,7 @@
 # CADyQ : Contents-Aware Dynamic Quantization for Image Super Resolution
 
-This resposity is the official implementation of our ECCV2022 [paper]().
+This respository is the official implementation of our ECCV2022 paper.
+<!-- [paper](). -->
 
 ![The framework of our paper.](https://github.com/Cheeun/CADyQ/blob/main/visualization/method-overview.png)
 <!-- (https://raw.githubusercontent.com/Cheeun/CADyQ/visualization/method-overview.png) -->
@@ -9,7 +10,8 @@ This resposity is the official implementation of our ECCV2022 [paper]().
 
 The overview of the proposed quantization framework CADyQ for SR network, which we illustrate with a residual block based backbone.
 For each given patch and each layer, our CADyQ module introduces a light-weight bit selector that dynamically selects the bit-width and its corresponding quantization function $Q_{b^{k}}$ among the candidate quantization functions with distinct bit-widths.
-The bit selector is conditioned on the estimated quantization sensitivity (the average gradient magnitude ${|\nabla{}|}$ of the given patch and the standard deviation $\sigma $ of the layer feature).
+The bit selector is conditioned on the estimated quantization sensitivity (the average gradient magnitude ${|\nabla{}|}$ of the given patch 
+and the standard deviation ${\sigma}$ of the layer feature).
 Qconv denotes the convolution layer of the quantized features and weights. 
 
 Our implementation is based on [EDSR(PyTorch)](https://github.com/thstkdgus35/EDSR-PyTorch) and [PAMS(PyTorch)](https://github.com/colorjam/PAMS).
