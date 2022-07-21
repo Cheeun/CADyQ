@@ -1,4 +1,4 @@
-# CADyQ : Contents-Aware Dynamic Quantization for Image Super Resolution
+# CADyQ : Content-Aware Dynamic Quantization for Image Super Resolution
 
 This respository is the official implementation of our ECCV2022 paper.
 <!-- [paper](). -->

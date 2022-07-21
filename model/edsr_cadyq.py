@@ -13,8 +13,9 @@ class ResidualBlock_CADyQ(nn.Module):
                  in_channels, out_channels, conv, act, kernel_size, res_scale, k_bits=32, bias=False, ema_epoch=1,search_space=[4,6,8],loss_kdf=False, linq=False):
         super(ResidualBlock_CADyQ, self).__init__()
 
+        self.bitsel1 = BitSelector(in_channels, bias=bias, ema_epoch=ema_epoch, search_space=search_space)
+
         self.body = nn.Sequential(
-            BitSelector(in_channels, bias=bias, ema_epoch=ema_epoch, search_space=search_space),
             conv(in_channels, out_channels, k_bits=k_bits, bias=bias, kernel_size=kernel_size, stride=1, padding=1),
             act,
             BitSelector(out_channels, bias=bias, ema_epoch=ema_epoch, search_space=search_space),
@@ -22,7 +23,10 @@ class ResidualBlock_CADyQ(nn.Module):
         )
         self.loss_kdf= loss_kdf
         self.res_scale = res_scale
-        self.quant_act3 = quant_act_pams(k_bits, ema_epoch=ema_epoch, rel_shift=True)
+
+        self.quant_act3 = quant_act_pams(k_bits, ema_epoch=ema_epoch)
+        self.shortcut = common.ShortCut()
+
 
 
     def forward(self, x):
@@ -32,13 +36,20 @@ class ResidualBlock_CADyQ(nn.Module):
         grad = x[0]
         x = x[1]
 
+        x = self.shortcut(x)
+        grad,x,bits,weighted_bits = self.bitsel1([grad,x,bits,weighted_bits]) # cadyq
         residual = x
-        grad,x,bits,weighted_bits= self.body[0]([grad,x,bits,weighted_bits]) # cadyq
-        x = self.body[1:3](x) # conv-relu
-        grad,x,bits,weighted_bits= self.body[3]([grad,x,bits,weighted_bits]) # cadyq
-        out = self.body[4](x) # conv
-        out = self.quant_act3(out)
+        # grad,x,bits,weighted_bits= self.body[0]() # cadyq
+        # x = self.body[1:3](x) # conv-relu
+        x = self.body[0:2](x) # conv-relu
+        # grad,x,bits,weighted_bits= self.body[3]([grad,x,bits,weighted_bits]) # cadyq
+        grad,x,bits,weighted_bits= self.body[2]([grad,x,bits,weighted_bits]) # cadyq
+        # out = self.body[4](x) # conv
+        out = self.body[3](x) # conv
         f1 = out
+        out = out.mul(self.res_scale)
+        out = self.quant_act3(out)
+        out += residual
         if self.loss_kdf:
             if f is None:
                 f = f1.unsqueeze(0)
@@ -47,10 +58,7 @@ class ResidualBlock_CADyQ(nn.Module):
         else:
             f = None
 
-        out = out.mul(self.res_scale)
-        
 
-        out = F.relu(out + residual)
         return [grad, out, bits, f, weighted_bits]
 
 

@@ -20,7 +20,7 @@ class ResBlock_PAMS(nn.Module):
 
 
         self.body = nn.Sequential(
-            self.quant_act1,
+            # self.quant_act1,
             conv(n_feats, n_feats, k_bits=k_bits, bias=bias, kernel_size=3, stride=1, padding=1),
             act,
             self.quant_act2,
@@ -34,13 +34,15 @@ class ResBlock_PAMS(nn.Module):
         f = x[1]
         x = x[0]
         
-        residual = self.body[0](self.shortcut(x))
-        body = self.body[1:](residual) 
+        # residual = self.body[0](self.shortcut(x))
+        # body = self.body[1:](residual) 
+        residual = self.quant_act1(self.shortcut(x))
+        body = self.body(residual) 
         
         f2 = body 
         body = body.mul(self.res_scale)
         res = self.quant_act3(body)
-        res = body
+        # res = body
         res += residual
 
         if self.loss_kdf:
@@ -82,7 +84,8 @@ class EDSR_PAMS(nn.Module):
 
         m_tail = [
             common.Upsampler(conv3x3, scale, n_feats, act=False),
-            nn.Conv2d(n_feats, args.n_colors, kernel_size, padding=(kernel_size//2))
+            conv3x3(n_feats, args.n_colors, kernel_size, bias=bias)
+            # nn.Conv2d(n_feats, args.n_colors, kernel_size, padding=(kernel_size//2))
         ]
         
         self.head = nn.Sequential(*m_head)
@@ -100,7 +103,6 @@ class EDSR_PAMS(nn.Module):
         res += x
 
         out = res
-
         x = self.tail(res)
         x = self.add_mean(x)
 

@@ -79,7 +79,7 @@ class Upsampler(nn.Sequential):
         m = []
         if (scale & (scale - 1)) == 0:    # Is scale = 2^n?
             for _ in range(int(math.log(scale, 2))):
-                m.append(conv(n_feats, 4 * n_feats, 3, bias))
+                m.append(conv(n_feats, 4 * n_feats, 3, bias=bias))
                 m.append(nn.PixelShuffle(2))
                 if bn:
                     m.append(nn.BatchNorm2d(n_feats))
@@ -91,7 +91,7 @@ class Upsampler(nn.Sequential):
                     m.append(nn.LeakyReLU(0.2, inplace=True))
 
         elif scale == 3:
-            m.append(conv(n_feats, 9 * n_feats, 3, bias))
+            m.append(conv(n_feats, 9 * n_feats, 3, bias=bias))
             m.append(nn.PixelShuffle(3))
             if bn:
                 m.append(nn.BatchNorm2d(n_feats))
@@ -108,23 +108,7 @@ class Upsampler(nn.Sequential):
 
 
 
-class Upsampler_linq(nn.Sequential):
-    def __init__(self, conv, scale, n_feats, bn=False, act=False, bias=True, k_bits=32, ema_epoch=1):
-        m = []
-        if (scale & (scale - 1)) == 0:    # Is scale = 2^n?
-            for _ in range(int(math.log(scale, 2))):
-                m.append(quant_act_pams(k_bits, ema_epoch=ema_epoch))
-                # m.append(quant_act_lin(k_bits))
-                m.append(conv(n_feats, 4 * n_feats, kernel_size=3, bias=bias, k_bits = k_bits))
-                m.append(nn.PixelShuffle(2))
-                if bn:
-                    m.append(nn.BatchNorm2d(n_feats))
-                if act == 'relu':
-                    m.append(nn.ReLU(True))
-                elif act == 'prelu':
-                    m.append(nn.PReLU(n_feats))
 
-        super(Upsampler_linq, self).__init__(*m)
 
 class Upsampler_q(nn.Module):
     def __init__(self, conv, scale, n_feats, bn=False, act=False, bias=True, k_bits=32, ema_epoch=1, search_space=[4,6,8]):
@@ -221,21 +205,3 @@ class Upsampler_srresnet(nn.Sequential):
         super(Upsampler_srresnet, self).__init__(*m)
 
 
-class Upsampler_srresnet_linq(nn.Sequential):
-    def __init__(self, conv, scale, n_feats, bn=False, act=False, bias=True, k_bits=32):
-
-        scale = 4 # for SRResNet
-        m = []
-        m.append(quant_act_lin(k_bits))
-        m.append(conv(n_feats, 4 * n_feats, 3, bias=False))
-        m.append(nn.PixelShuffle(2))
-        m.append(nn.PReLU())
-        # m.append(nn.LeakyReLU(0.2, inplace=True))
-        m.append(quant_act_lin(k_bits))
-        m.append(conv(n_feats, 4 * n_feats, 3, bias=False))
-        m.append(nn.PixelShuffle(2))
-        # m.append(nn.LeakyReLU(0.2, inplace=True))
-        m.append(nn.PReLU())
-        
-
-        super(Upsampler_srresnet_linq, self).__init__(*m)

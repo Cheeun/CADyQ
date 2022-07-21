@@ -691,7 +691,7 @@ def main():
             s_model = CARN_CADyQ(args, bias=True, multi_scale=args.multi_scale).to(device)
 
         elif args.model == 'EDSR':
-            t_model = EDSR_PAMS(args, bias=True,k_bits=args.k_bits).to(device)            
+            t_model = EDSR_PAMS(args, bias=True, k_bits=args.k_bits).to(device)            
             s_model = EDSR_CADyQ(args, bias=True,k_bits=args.k_bits).to(device)
         
         elif args.model =='IDN':
@@ -741,26 +741,24 @@ def main():
                             s_checkpoint['b{}.b{}.body.3.quant_bit1.max_val'.format(carnblk+1,resblk+1)]=s_checkpoint['b{}.b{}.body.3.max_val'.format(carnblk+1,resblk+1)]
                             s_checkpoint['b{}.b{}.body.3.quant_bit2.max_val'.format(carnblk+1,resblk+1)]=s_checkpoint['b{}.b{}.body.3.max_val'.format(carnblk+1,resblk+1)]
                             s_checkpoint['b{}.b{}.body.3.quant_bit3.max_val'.format(carnblk+1,resblk+1)]=s_checkpoint.pop('b{}.b{}.body.3.max_val'.format(carnblk+1,resblk+1))
-                        
-                # TODO
+                
                 elif args.model == 'EDSR':
                     for blk in range(args.n_resblocks):
-                        s_checkpoint['body.{}.quant_bit1.alpha'.format(blk)]=s_checkpoint.pop('body.{}.quant_act1.alpha'.format(blk))
-                        s_checkpoint['body.{}.quant_bit2.alpha'.format(blk)]=s_checkpoint['body.{}.quant_bit1.alpha'.format(blk)]
-                        s_checkpoint['body.{}.quant_bit3.alpha'.format(blk)]=s_checkpoint['body.{}.quant_bit1.alpha'.format(blk)]
+                        s_checkpoint['body.{}.bitsel1.quant_bit1.alpha'.format(blk)]=s_checkpoint.pop('body.{}.quant_act1.alpha'.format(blk))
+                        s_checkpoint['body.{}.bitsel1.quant_bit2.alpha'.format(blk)]= s_checkpoint['body.{}.bitsel1.quant_bit1.alpha'.format(blk)]
+                        s_checkpoint['body.{}.bitsel1.quant_bit3.alpha'.format(blk)]= s_checkpoint['body.{}.bitsel1.quant_bit1.alpha'.format(blk)]
+                        s_checkpoint['body.{}.bitsel1.quant_bit1.max_val'.format(blk)]=s_checkpoint.pop('body.{}.quant_act1.max_val'.format(blk))
+                        s_checkpoint['body.{}.bitsel1.quant_bit2.max_val'.format(blk)]=s_checkpoint['body.{}.bitsel1.quant_bit1.max_val'.format(blk)]
+                        s_checkpoint['body.{}.bitsel1.quant_bit3.max_val'.format(blk)]=s_checkpoint['body.{}.bitsel1.quant_bit1.max_val'.format(blk)]
 
-                        s_checkpoint['body.{}.quant_bit1.max_val'.format(blk)]=s_checkpoint.pop('body.{}.quant_act1.max_val'.format(blk))
-                        s_checkpoint['body.{}.quant_bit2.max_val'.format(blk)]=s_checkpoint['body.{}.quant_bit1.max_val'.format(blk)]
-                        s_checkpoint['body.{}.quant_bit3.max_val'.format(blk)]=s_checkpoint['body.{}.quant_bit1.max_val'.format(blk)]
+                        s_checkpoint['body.{}.body.2.quant_bit1.alpha'.format(blk)]=s_checkpoint.pop('body.{}.quant_act2.alpha'.format(blk))
+                        s_checkpoint['body.{}.body.2.quant_bit2.alpha'.format(blk)]=s_checkpoint['body.{}.body.2.quant_bit1.alpha'.format(blk)]
+                        s_checkpoint['body.{}.body.2.quant_bit3.alpha'.format(blk)]=s_checkpoint['body.{}.body.2.quant_bit1.alpha'.format(blk)]
+                        s_checkpoint['body.{}.body.2.quant_bit1.max_val'.format(blk)]=s_checkpoint.pop('body.{}.quant_act2.max_val'.format(blk))
+                        s_checkpoint['body.{}.body.2.quant_bit2.max_val'.format(blk)]=s_checkpoint['body.{}.body.2.quant_bit1.max_val'.format(blk)]
+                        s_checkpoint['body.{}.body.2.quant_bit3.max_val'.format(blk)]=s_checkpoint['body.{}.body.2.quant_bit1.max_val'.format(blk)]
 
-                        s_checkpoint['body.{}.quant_bit1_2.alpha'.format(blk)]=s_checkpoint.pop('body.{}.quant_act2.alpha'.format(blk))
-                        s_checkpoint['body.{}.quant_bit2_2.alpha'.format(blk)]=s_checkpoint['body.{}.quant_bit1_2.alpha'.format(blk)]
-                        s_checkpoint['body.{}.quant_bit3_2.alpha'.format(blk)]=s_checkpoint['body.{}.quant_bit1_2.alpha'.format(blk)]
-
-                        s_checkpoint['body.{}.quant_bit1_2.max_val'.format(blk)]=s_checkpoint.pop('body.{}.quant_act2.max_val'.format(blk))
-                        s_checkpoint['body.{}.quant_bit2_2.max_val'.format(blk)]=s_checkpoint['body.{}.quant_bit1_2.max_val'.format(blk)]
-                        s_checkpoint['body.{}.quant_bit3_2.max_val'.format(blk)]=s_checkpoint['body.{}.quant_bit1_2.max_val'.format(blk)]
-
+                        
                 elif args.model =='IDN':
                     for blk in range(4):
                         for mod in range(3):
