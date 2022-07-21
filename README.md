@@ -25,10 +25,12 @@ conda activate CADyQ
 ```
 
 ### Dependencies
+* kornia (pip install kornia)
 * Python 3.6
 * PyTorch == 1.1.0
 * coloredlogs >= 14.0
 * scikit-image
+
 
 
 ### Datasets

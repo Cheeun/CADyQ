@@ -1,4 +1,4 @@
-CUDA_VISIBLE_DEVICES=3 python3 main.py \
+CUDA_VISIBLE_DEVICES=4 python3 main.py \
 --test_only \
 --data_test Urban100 --dir_data /mnt/disk1/cheeun914/datasets/ --n_GPUs 1 \
 --scale 4 --k_bits 8 --model CARN \

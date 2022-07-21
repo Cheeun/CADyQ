@@ -226,13 +226,13 @@ def ssim(img1, img2):
                                                             (sigma1_sq + sigma2_sq + C2))
     return ssim_map.mean()
 
-import lpips
+# import lpips
 
-def calc_lpips(img1, img2, rgb_range, loss_fn):
-    img1 = img1.div(rgb_range).clamp_(0, 1)   # LPIPS img range = [0, 1]
-    img2 = img2.div(rgb_range).clamp_(0, 1)
+# def calc_lpips(img1, img2, rgb_range, loss_fn):
+#     img1 = img1.div(rgb_range).clamp_(0, 1)   # LPIPS img range = [0, 1]
+#     img2 = img2.div(rgb_range).clamp_(0, 1)
 
-    return loss_fn(img1, img2)
+#     return loss_fn(img1, img2)
 
 
 def bgr2ycbcr(img, only_y=True):
