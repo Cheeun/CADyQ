@@ -60,7 +60,7 @@ sh train_idn_cadyq.sh
 sh train_edsrbaseline_cadyq.sh
 sh train_srresnet_cadyq.sh
 ```
-Pretrained model for stduent and teacher model to start training from can be accessed from [Google Drive](https://drive.google.com/drive/folders/1nPVdcqLqcaq-fp3Kg04WCUKav0PFER6x?usp=sharing).
+Model weights for stduent and teacher model to start training from can be accessed from [Google Drive](https://drive.google.com/drive/folders/1nPVdcqLqcaq-fp3Kg04WCUKav0PFER6x?usp=sharing).
 
 
 ### How to test CADyQ
@@ -68,14 +68,27 @@ Pretrained model for stduent and teacher model to start training from can be acc
 sh test_cadyq_patch.sh # for patch-wise inference
 sh test_cadyq_image.sh # for image-wise inference
 ```
-<!-- TODO -->
-<!-- Our pretrained model can be accessed from [Google Drive](https://drive.google.com/drive/folders/1nPVdcqLqcaq-fp3Kg04WCUKav0PFER6x?usp=sharing). -->
+- One example of the inference command
+```
+CUDA_VISIBLE_DEVICES=0 python3 main.py \
+--test_only --cadyq --search_space 4+6+8 --scale 4 --k_bits 8 \
+--model CARN --n_feats 64 --n_resblocks 9 --group 1 --multi_scale \
+--student_weights dir/for/our/pretrained_model \
+--data_test Urban100 --dir_data dir/for/datasets \
+```
+- Our pretrained model can be accessed from [Google Drive](https://drive.google.com/drive/folders/1pkbG4bQG6CoTxJKrUnBAEOxeQVUzvAsp?usp=sharing).
 
 
 
 ### Citation
+If you found our implementation useful, please consider citing our paper:
 ```
-
+@article{hong2022cadyq,
+  title={CADyQ: Content-Aware Dynamic Quantization for Image Super-Resolution},
+  author={Hong, Cheeun and Baik, Sungyong and Kim, Heewon and Nah, Seungjun and Lee, Kyoung Mu},
+  journal={arXiv preprint arXiv:2207.10345},
+  year={2022}
+}
 ```
 
 ### Contact
