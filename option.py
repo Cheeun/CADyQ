@@ -189,8 +189,8 @@ parser.add_argument('--test_patch', action='store_true', help='testing patch-wis
 parser.add_argument('--step_size', type=int, default=28, help='step size for combining patches')
 parser.add_argument('--save_patch', action='store_true',help='save patch results')
 
-parser.add_argument('--linq', action='store_true', help='linq') 
-parser.add_argument('--fully', action='store_true', help='full quantization') 
+# parser.add_argument('--linq', action='store_true', help='linq') 
+# parser.add_argument('--fully', action='store_true', help='full quantization') 
 # parser.add_argument('--train_full', action='store_true', help='pretraining 32 bit model') 
 # parser.add_argument('--lpips', action='store_true', help='use lpips loss for optimization') 
 

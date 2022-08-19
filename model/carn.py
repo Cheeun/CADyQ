@@ -74,7 +74,7 @@ class _UpsampleBlock(nn.Module):
             for _ in range(int(math.log(scale, 2))):
                 if fully: 
                     # modules += [quant_act_lin(k_bits)]
-                    modules += [pams_quant_act(k_bits, ema_epoch=1)]
+                    modules += [quant_act_pams(k_bits, ema_epoch=1)]
 
                 modules += [nn.Conv2d(n_channels, 4*n_channels, 3, 1, 1, groups=group), nn.ReLU(inplace=True)]
                 modules += [nn.PixelShuffle(2)]

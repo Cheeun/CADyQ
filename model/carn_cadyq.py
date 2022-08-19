@@ -55,10 +55,10 @@ class CARNBlock_CADyQ(nn.Module):
         self.b2 = ResidualBlock_CADyQ(in_channels, out_channels, conv, k_bits=k_bits, bias=bias, ema_epoch=ema_epoch,search_space=search_space,loss_kdf=loss_kdf,linq=linq)
         self.b3 = ResidualBlock_CADyQ(in_channels, out_channels, conv, k_bits=k_bits, bias=bias, ema_epoch=ema_epoch,search_space=search_space,loss_kdf=loss_kdf,linq=linq)
 
-        if fully:
-            self.c1 = carn_pams.PAMS_BasicBlock(in_channels*2, out_channels, conv, k_bits=k_bits, bias=bias,ema_epoch=ema_epoch, ksize=1, stride=1, pad=0)
-            self.c2 = carn_pams.PAMS_BasicBlock(in_channels*3, out_channels, conv, k_bits=k_bits, bias=bias,ema_epoch=ema_epoch, ksize=1, stride=1, pad=0)
-            self.c3 = carn_pams.PAMS_BasicBlock(in_channels*4, out_channels, conv, k_bits=k_bits, bias=bias,ema_epoch=ema_epoch, ksize=1, stride=1, pad=0)
+        if fully: 
+            self.c1 = carn_pams.BasicBlock_PAMS(in_channels*2, out_channels, conv, k_bits=k_bits, bias=bias,ema_epoch=ema_epoch, ksize=1, stride=1, pad=0)
+            self.c2 = carn_pams.BasicBlock_PAMS(in_channels*3, out_channels, conv, k_bits=k_bits, bias=bias,ema_epoch=ema_epoch, ksize=1, stride=1, pad=0)
+            self.c3 = carn_pams.BasicBlock_PAMS(in_channels*4, out_channels, conv, k_bits=k_bits, bias=bias,ema_epoch=ema_epoch, ksize=1, stride=1, pad=0)
         else:
             self.c1 = carn.BasicBlock(in_channels*2, out_channels, 1, 1, 0)
             self.c2 = carn.BasicBlock(in_channels*3, out_channels, 1, 1, 0)
